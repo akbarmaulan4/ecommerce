@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:tokoonline/constant/decoration_constant.dart';
 import 'package:tokoonline/constant/image_constant.dart';
 import 'package:tokoonline/constant/text_constant.dart';
+import 'package:tokoonline/controller/home/home_controller.dart';
 
 class ShowCaseWidget extends StatefulWidget {
   const ShowCaseWidget({Key? key}) : super(key: key);
@@ -16,6 +17,14 @@ class ShowCaseWidget extends StatefulWidget {
 class _ShowCaseWidgetState extends State<ShowCaseWidget> {
 
   RxInt indexPage = 0.obs;
+  HomeController controller = HomeController();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    controller.getBanner(context: context);
+  }
   @override
   Widget build(BuildContext context) {
     return Obx(()=>
@@ -34,7 +43,7 @@ class _ShowCaseWidgetState extends State<ShowCaseWidget> {
                     indexPage.value = index;
                   }
                 ),
-                items: [1,2,3,4].map((promo) {
+                items: controller.dataBanner.value.map((promo) {
                   return GestureDetector(
                     onTap: () {
                     },
@@ -45,7 +54,7 @@ class _ShowCaseWidgetState extends State<ShowCaseWidget> {
                       decoration: DecorationConstant.boxButton(radius: 8, color: Colors.white),
                       child: CachedNetworkImage(
                           fit: BoxFit.cover,
-                          imageUrl: 'https://assets.adidas.com/images/w_600,f_auto,q_auto/dd5856ece5894f9987e9ae890026a723_9366/Forum_Low_CL_Shoes_White_HQ6874_01_standard.jpg',
+                          imageUrl: promo!.image!,
                           imageBuilder: (context, imageProvider) => Container(
                             decoration: BoxDecoration(
                               // shape: BoxShape.circle,
@@ -70,7 +79,7 @@ class _ShowCaseWidgetState extends State<ShowCaseWidget> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [1,2,3,4].asMap().map((index, value) => MapEntry(index, Container(
+                      children: controller.dataBanner.value.asMap().map((index, value) => MapEntry(index, Container(
                         width: 8.0,height: 8.0,
                         margin: EdgeInsets.symmetric(vertical: 14.0, horizontal: 2.0),
                         decoration: DecorationConstant.boxCircle(color: indexPage.value == index ? Colors.green : Colors.grey.shade400 )

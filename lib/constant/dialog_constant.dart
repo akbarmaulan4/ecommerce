@@ -27,20 +27,25 @@ class DialogConstant {
                 SizedBox(height: 16),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Text(message, style: TextConstant.regular,),
+                  child: Text('Peringatan', style: TextConstant.regular.copyWith(color: Colors.redAccent, fontSize: 15, fontWeight: FontWeight.bold),),
+                ),
+                SizedBox(height: 16),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Text(message, style: TextConstant.regular.copyWith(color: Colors.black87, fontSize: 15),),
                 ),
                 SizedBox(height: 16),
                 Divider(
                   height: 0,
                 ),
-                RaisedButton(
+                TextButton(
                   child: Text(
                     'OKE',
                     style: TextConstant.medium.copyWith(color: Colors.blue),
                   ),
-                  elevation: 0,
-                  disabledElevation: 0,
-                  color: Colors.white,
+                  // elevation: 0,
+                  // disabledElevation: 0,
+                  // color: Colors.white,
                   onPressed: () {
                     Navigator.of(context).pop();
                     print("message error : $message");

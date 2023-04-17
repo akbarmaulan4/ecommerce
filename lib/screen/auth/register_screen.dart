@@ -144,7 +144,18 @@ class _LoginScreenState extends State<RegisterScreen> {
                 context: context,
                 callback: (result, error){
                   if(result != null){
-                    DialogConstant.alertError('Pendaftaran Berhasil');
+                    if(result['error'] == true){
+                      DialogConstant.alertError(result['message']);
+                    }else{
+                      DialogConstant.alertError('Pendaftaran Berhasil', function: (){
+                        controller.edtNama.text = '';
+                        controller.edtEmail.text = '';
+                        controller.edtNohp.text = '';
+                        controller.edtPass.text = '';
+                        controller.edtConfirmPass.text = '';
+                        Get.back();
+                      });
+                    }
                   }
                   if(error != null){
                     DialogConstant.alertError('Pendaftaran Gagal');

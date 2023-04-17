@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -7,6 +9,7 @@ import 'package:tokoonline/constant/dialog_constant.dart';
 import 'package:tokoonline/constant/image_constant.dart';
 import 'package:tokoonline/constant/text_constant.dart';
 import 'package:tokoonline/controller/auth_controller.dart';
+import 'package:tokoonline/model/auth/model_user.dart';
 import 'package:tokoonline/screen/auth/forgot_password_screen.dart';
 import 'package:tokoonline/screen/auth/register_screen.dart';
 import 'package:tokoonline/screen/home/main_home.dart';
@@ -28,7 +31,7 @@ class _LoginScreenState extends State<LoginScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    clearCart();
+    // clearCart();
   }
 
   clearCart(){
@@ -62,7 +65,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         child: TextField(
                           controller: controller.edtNohp,
                           maxLength: 25,
-                          // keyboardType: TextInputType.phone,
+                          keyboardType: TextInputType.phone,
                           inputFormatters: [
                             LengthLimitingTextInputFormatter(12),
                             FilteringTextInputFormatter.deny(RegExp('[\\-|\\,|\\.|\\#|\\*]'))
@@ -123,7 +126,14 @@ class _LoginScreenState extends State<LoginScreen> {
                     context: context,
                     callback: (result, error){
                       if(result != null){
-                        Get.to(()=>MainHome());
+                        if(result['error'] == true){
+                          DialogConstant.alertError(result['message']);
+                        }else{
+                          ModelUser user = ModelUser.fromJson(result['data'][0]);
+                          LocalData.saveData('user', jsonEncode(user));
+                          Get.to(()=>MainHome());
+                        }
+
                       }else{
                         DialogConstant.alertError('Maaf ada kesalahan');
                       }

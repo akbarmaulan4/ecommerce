@@ -1,11 +1,23 @@
+import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:tokoonline/constant/decoration_constant.dart';
 import 'package:tokoonline/constant/image_constant.dart';
 import 'package:tokoonline/constant/text_constant.dart';
+import 'package:tokoonline/controller/auth_controller.dart';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key}) : super(key: key);
+
+  @override
+  State<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
+
+  var controller = AuthController();
 
   @override
   Widget build(BuildContext context) {
@@ -27,19 +39,26 @@ class ProfileScreen extends StatelessWidget {
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  CachedNetworkImage(
-                    imageUrl: 'https://mmc.tirto.id/image/otf/500x0/2020/12/11/orangtuan-jungle_ratio-16x9.jpg',
-                    imageBuilder: (context, imageProvider) => Container(
-                      width: 80.0,
-                      height: 80.0,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        image: DecorationImage(
-                            image: imageProvider, fit: BoxFit.cover),
+                  GestureDetector(
+                    onTap: ()=>showPicker(context),
+                    child: controller.filePhoto.value.path != '' ? Container(
+                      decoration: DecorationConstant.boxCircle(),
+                      child: ClipOval(
+                        child: Image.file(controller.filePhoto.value, width: 80, height: 80, fit: BoxFit.cover),
+                      )):CachedNetworkImage(
+                      imageUrl: 'https://mmc.tirto.id/image/otf/500x0/2020/12/11/orangtuan-jungle_ratio-16x9.jpg',
+                      imageBuilder: (context, imageProvider) => Container(
+                        width: 80.0,
+                        height: 80.0,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          image: DecorationImage(
+                              image: imageProvider, fit: BoxFit.cover),
+                        ),
                       ),
+                      placeholder: (context, url) => CircularProgressIndicator(),
+                      errorWidget: (context, url, error) => Icon(Icons.error),
                     ),
-                    placeholder: (context, url) => CircularProgressIndicator(),
-                    errorWidget: (context, url, error) => Icon(Icons.error),
                   ),
                   Expanded(child: Container(
                     padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
@@ -84,5 +103,63 @@ class ProfileScreen extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  showPicker(BuildContext context) {
+    showModalBottomSheet(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        // backgroundColor: Colors.transparent,
+        context: context,
+        builder: (BuildContext bc) {
+          return SafeArea(
+            child: Container(
+              child: new Wrap(
+                children: <Widget>[
+                  new ListTile(
+                      leading: new Icon(Icons.photo_library),
+                      title: new Text('Photo Library'),
+                      onTap: () {
+                        _imgFromGallery();
+                        Navigator.of(context).pop();
+                      }),
+                  new ListTile(
+                    leading: new Icon(Icons.photo_camera),
+                    title: new Text('Camera'),
+                    onTap: () {
+                      _imgFromCamera();
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ],
+              ),
+            ),
+          );
+        });
+  }
+
+  _imgFromCamera() async {
+    final pickedFile = await ImagePicker().pickImage(
+        source: ImageSource.camera,
+        imageQuality: 100,
+        maxWidth: 1024,
+        maxHeight: 768);
+    if(pickedFile != null){
+      var image = File(pickedFile.path);
+      controller.filePhoto.value = image;
+    }
+  }
+
+  _imgFromGallery() async {
+    final pickedFile = await ImagePicker().pickImage(
+        source: ImageSource.gallery,
+        imageQuality: 100,
+        maxWidth: 1024,
+        maxHeight: 768);
+    if(pickedFile != null){
+      var image = File(pickedFile.path);
+      controller.filePhoto.value = image;
+    }
   }
 }

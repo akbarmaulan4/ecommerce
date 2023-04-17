@@ -26,10 +26,10 @@ class ProductController extends GetxController{
       var json = jsonDecode(data);
       var carts = (json as List<dynamic>?)?.map((e) => ModelSKU.fromJson(e as Map<String, dynamic>)).toList();
       if(carts!.length > 0){
-        var dataCheck = carts.where((element) => element.id! == modelCart.id!).toList();
+        var dataCheck = carts.where((element) => element.sku_id! == modelCart.sku_id!).toList();
         if(dataCart.length > 0){
           modelCart.qty = modelCart.qty!+dataCheck[0].qty!;
-          carts.removeWhere((element) => element.id! == modelCart.id!);
+          carts.removeWhere((element) => element.sku_id! == modelCart.sku_id!);
         }
       }
       await LocalData.removeData('cart');

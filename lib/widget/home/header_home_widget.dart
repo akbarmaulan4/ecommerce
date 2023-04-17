@@ -1,17 +1,23 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:tokoonline/constant/decoration_constant.dart';
 import 'package:tokoonline/constant/text_constant.dart';
+import 'package:tokoonline/controller/home/home_controller.dart';
 
 class HeaderHomeWidget extends StatelessWidget {
   Function? onSearch;
-  HeaderHomeWidget({Key? key, this.onSearch}) : super(key: key);
+  Function? onCheckout;
+  HeaderHomeWidget({Key? key, this.onSearch, this.onCheckout}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    return Container(
+    HomeController controller = HomeController();
+    controller.loadUser();
+    controller.loadCart();
+    return Obx(()=>Container(
       color: Colors.green,
       padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       child: Column(
@@ -19,11 +25,26 @@ class HeaderHomeWidget extends StatelessWidget {
           SizedBox(height: size.height * 0.035,),
           Row(
             children: [
-              Text('Hi, Akbar', style: TextConstant.medium.copyWith(color: Colors.white, fontSize: 15, fontWeight: FontWeight.bold),),
+              Text('Hi, ${controller.strUserName}', style: TextConstant.medium.copyWith(color: Colors.white, fontSize: 15, fontWeight: FontWeight.bold),),
               Expanded(child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  Icon(CupertinoIcons.cart, color: Colors.white,),
+                  GestureDetector(
+                    child: Container(
+                      margin: EdgeInsets.only(right: 10),
+                      child: Stack(children: [
+                        Icon(CupertinoIcons.cart, color: Colors.white,),
+                        controller.dataCart.value.length > 0 ? Positioned(
+                          left: 15,
+                          child: Container(
+                            height: 10, width: 10,
+                            decoration: DecorationConstant.boxCircle(color: Colors.redAccent),
+                          ),
+                        ):SizedBox()
+                      ]),
+                    ),
+                    onTap: ()=>onCheckout!(),
+                  ),
                   SizedBox(width: 10),
                   CachedNetworkImage(
                     imageUrl: 'https://mmc.tirto.id/image/otf/500x0/2020/12/11/orangtuan-jungle_ratio-16x9.jpg',
@@ -70,6 +91,6 @@ class HeaderHomeWidget extends StatelessWidget {
           )
         ],
       ),
-    );
+    ));
   }
 }

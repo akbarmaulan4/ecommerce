@@ -2,12 +2,15 @@
 class ModelSKU{
 
   ModelSKU();
-  int? id;
-  int? category_id;
-  String? sku_name;
-  double? price;
-  int? dicount;
-  String? detail;
+  String? sku_id;
+  String? image;
+  String? title;
+  String? description;
+  String? price;
+  String? discount_price;
+  String? discount;
+  String? stock;
+  String? category_id;
   int? qty;
 
   factory ModelSKU.fromJson(Map<String, dynamic> json) => _$fromJson(json);
@@ -16,23 +19,29 @@ class ModelSKU{
 
 ModelSKU _$fromJson(Map<String, dynamic> json) {
   return ModelSKU()
-    ..id = json['id'] as int
-    ..category_id = json['category_id'] as int
-    ..sku_name = json['sku_name'] as String
-    ..price = json['price'] as double
-    ..dicount = json['dicount'] as int
-    ..detail = json['detail'] as String
-    ..qty = json['qty'] as int
+    ..sku_id = json['sku_id'] as String
+    ..image = json['image'] as String
+    ..title = json['title'] as String
+    ..description = json['description'] as String
+    ..price = json['price'] as String
+    ..discount_price = json['discount_price'] as String
+    ..discount = json['discount'] as String
+    ..stock = json['stock'] as String
+    ..category_id = json['category_id'] as String
+    ..qty = json['qty'] != null ? json['qty'] as int : 0
   ;
 }
 
 Map<String, dynamic> _$toJson(ModelSKU cartCheckoutProduct) =>
     <String, dynamic> {
-      'id': cartCheckoutProduct.id,
-      'category_id': cartCheckoutProduct.category_id,
-      'sku_name': cartCheckoutProduct.sku_name,
+      'sku_id': cartCheckoutProduct.sku_id,
+      'image': cartCheckoutProduct.image,
+      'title': cartCheckoutProduct.title,
+      'description': cartCheckoutProduct.description,
       'price': cartCheckoutProduct.price,
-      'dicount': cartCheckoutProduct.dicount,
-      'detail': cartCheckoutProduct.detail,
+      'discount_price': cartCheckoutProduct.discount_price,
+      'discount': cartCheckoutProduct.discount,
+      'stock': cartCheckoutProduct.stock,
+      'category_id': cartCheckoutProduct.category_id,
       'qty': cartCheckoutProduct.qty,
     };

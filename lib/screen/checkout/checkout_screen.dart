@@ -2,16 +2,33 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tokoonline/constant/decoration_constant.dart';
 import 'package:tokoonline/constant/text_constant.dart';
+import 'package:tokoonline/controller/checkout/checkout_controller.dart';
 import 'package:tokoonline/screen/address/list_alamat_screen.dart';
 import 'package:tokoonline/screen/checkout/sukses_checkout_scree.dart';
+import 'package:tokoonline/screen/payment/list_payment_screen.dart';
 import 'package:tokoonline/screen/pengiriman/list_pengiriman_screen.dart';
 import 'package:tokoonline/widget/appbar_widget.dart';
 import 'package:tokoonline/widget/cart/item_cart_widget.dart';
 import 'package:tokoonline/widget/checkout/alamat_widget.dart';
 import 'package:tokoonline/widget/checkout/item_cart_checkout.dart';
 
-class CheckOutScreen extends StatelessWidget {
+class CheckOutScreen extends StatefulWidget {
   const CheckOutScreen({Key? key}) : super(key: key);
+
+  @override
+  State<CheckOutScreen> createState() => _CheckOutScreenState();
+}
+
+class _CheckOutScreenState extends State<CheckOutScreen> {
+
+  CheckoutController controller = CheckoutController();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    controller.loadCart();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +38,7 @@ class CheckOutScreen extends StatelessWidget {
       body: Container(
         width: double.infinity,
         padding: EdgeInsets.all(10),
-        child: SingleChildScrollView(
+        child: Obx(()=>SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -32,9 +49,12 @@ class CheckOutScreen extends StatelessWidget {
               Text('Produk', style: TextConstant.medium.copyWith(color: Colors.black87, fontSize: 16, fontWeight: FontWeight.w700),),
               SizedBox(height: 20),
               Column(
-                children: [
-                  ItemCartCheckoutWidget()
-                ],
+                children: controller.dataCart.map((element) => ItemCartCheckoutWidget(
+                  data: element,
+                )).toList(),
+                // children: [
+                //   ItemCartCheckoutWidget()
+                // ],
               ),
               SizedBox(height: 40),
               GestureDetector(
@@ -43,13 +63,37 @@ class CheckOutScreen extends StatelessWidget {
                   // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                  Text('Pilih Pengiriman', style: TextConstant.medium.copyWith(color: Colors.black87, fontSize: 16, fontWeight: FontWeight.w700)),
+                    Text('Pilih Pengiriman', style: TextConstant.medium.copyWith(color: Colors.black87, fontSize: 16, fontWeight: FontWeight.w700)),
                     Expanded(
                       child: Container(
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             Text('JNE', style: TextConstant.regular,),
+                            Icon(Icons.chevron_right_rounded, color: Colors.green,)
+                          ],
+                        ),
+                      ),
+                    )
+
+                    // Text('>', style: TextConstant.medium.copyWith(color: Colors.green, fontSize: 16, fontWeight: FontWeight.w700),),
+                  ],
+                ),
+              ),
+              SizedBox(height: 20),
+              GestureDetector(
+                onTap: ()=>Get.to(()=>ListPaymentScreen()),
+                child: Row(
+                  // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Pilih Metode Pembayaran', style: TextConstant.medium.copyWith(color: Colors.black87, fontSize: 16, fontWeight: FontWeight.w700)),
+                    Expanded(
+                      child: Container(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Text('Mandiri Virtual Account', style: TextConstant.regular,),
                             Icon(Icons.chevron_right_rounded, color: Colors.green,)
                           ],
                         ),
@@ -95,7 +139,7 @@ class CheckOutScreen extends StatelessWidget {
               )
             ],
           ),
-        ),
+        )),
       ),
       bottomNavigationBar: Wrap(
         children: [

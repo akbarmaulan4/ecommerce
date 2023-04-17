@@ -1,4 +1,6 @@
 
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:tokoonline/api/api.dart';
@@ -8,6 +10,7 @@ import 'package:tokoonline/model/auth/model_user.dart';
 class AuthController extends GetxController{
 
   RxBool openPassLogin = true.obs;
+  Rx<File> filePhoto = File('').obs;
   TextEditingController edtNama = TextEditingController();
   TextEditingController edtEmail = TextEditingController();
   TextEditingController edtNohp = TextEditingController();
@@ -39,7 +42,7 @@ class AuthController extends GetxController{
     var header = new Map<String, String>();
 
     header['Content-Type'] = 'application/json';
-    post['username'] = edtNohp.text;
+    post['phone'] = edtNohp.text;
     post['password'] = edtPass.text;
 
     DialogConstant.loading(context!, 'Memperoses...');
@@ -90,7 +93,7 @@ class AuthController extends GetxController{
 
     DialogConstant.loading(context!, 'Memperoses...');
 
-    API.basePost('/login.php', post, header, true, (result, error) {
+    API.basePost('/register.php', post, header, true, (result, error) {
       Get.back();
       if(error != null){
         callback!(null, error);

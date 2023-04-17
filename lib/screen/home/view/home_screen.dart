@@ -6,6 +6,8 @@ import 'package:get/get.dart';
 import 'package:tokoonline/constant/decoration_constant.dart';
 import 'package:tokoonline/constant/image_constant.dart';
 import 'package:tokoonline/constant/text_constant.dart';
+import 'package:tokoonline/controller/home/home_controller.dart';
+import 'package:tokoonline/screen/checkout/checkout_screen.dart';
 import 'package:tokoonline/screen/product/detail_product_screen.dart';
 import 'package:tokoonline/screen/product/search_product_screen.dart';
 import 'package:tokoonline/widget/cart/item_cart_widget.dart';
@@ -21,6 +23,16 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+
+  HomeController controller = HomeController();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    controller.getItemCategory();
+  }
+
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
@@ -31,14 +43,16 @@ class _HomeScreenState extends State<HomeScreen> {
             // SizedBox(height: size.height * 0.035,),
             HeaderHomeWidget(
               onSearch: ()=>Get.to(()=>SearchProductScreen()),
+              onCheckout: ()=> Get.to(()=>CheckOutScreen()),
             ),
             ShowCaseWidget(),
-            ListCartWidget(
-              title: 'Produk Baru',
-              onItemClick: ()=>Get.to(()=>DetailProductScreen()),
-            ),
-            ListCartWidget(title: 'Sepatu', onItemClick: ()=>Get.to(()=>DetailProductScreen())),
-            ListCartWidget(title: 'Tas', onItemClick: ()=>Get.to(()=>DetailProductScreen())),
+            Obx(()=>Column(
+              children: controller.dataCategory.map((element) => ListCartWidget(
+                data: element,
+                onItemClick: (data)=>Get.to(()=>DetailProductScreen(
+                  data: data,
+                )))).toList(),
+            ))
 
           ],
         ),

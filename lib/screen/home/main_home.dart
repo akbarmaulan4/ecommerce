@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:tokoonline/controller/home_controller.dart';
+import 'package:tokoonline/controller/home/home_controller.dart';
 import 'package:tokoonline/screen/home/view/home_screen.dart';
 import 'package:tokoonline/screen/home/view/profile_screen.dart';
 
